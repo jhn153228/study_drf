@@ -1,5 +1,7 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view, action
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -57,3 +59,19 @@ class PostViewSet(ModelViewSet):
         serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
+
+class PostDetailAPIView(RetrieveAPIView):
+    queryset = Post.objects.all()
+    '''TemplateHTMLRenderer : 지정 템플릿을 통한 렌더링
+    JSON 방식이 아닌 HTML 방식으로 받아야할 때?
+    '''
+    renderer_classes = [TemplateHTMLRenderer]
+
+    template_name = 'instagram/post_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        post = self.get_object()
+
+        return Response({
+            'post': PostSerializer(post).data,
+        })
