@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view, action
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -39,7 +40,8 @@ GET, POST, PUT, DELETE 한번에 다 가능
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-
+    # authentication_classes = []
+    permission_classes = [IsAuthenticated] # 인증된 요청 한해서 뷰 호출 허용
     def perform_create(self, serializer):
         # FIXME: 인증이 되어있다는 가정하에
         author = self.request.user #
