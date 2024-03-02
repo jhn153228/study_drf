@@ -40,6 +40,12 @@ class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+    def perform_create(self, serializer):
+        # FIXME: 인증이 되어있다는 가정하에
+        author = self.request.user #
+        ip = self.request.META['REMOTE_ADDR']
+        serializer.save(author=author, ip=ip)
+
     '''/post/ 뒤에 url이 추가로 붙어 메소드별로 컨트롤할 수 있음
     rest_framework.routers.DefaultRouter 에서 지원하는 기능
     ex) localhost:8000/post/{함수명}
