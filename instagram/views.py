@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view, action
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -42,6 +43,11 @@ class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     # authentication_classes = []
     permission_classes = [IsAuthenticated] # 인증된 요청 한해서 뷰 호출 허용
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['message']
+    ordering_fields = ['id']    # 정렬을 허용할 필드의 화이트 리스트 ( 미지정 시 serializer_class에 지정된 필드들 )
+    ordering = ['id']           # 디폴트 정렬 지정
+
     def perform_create(self, serializer):
         # FIXME: 인증이 되어있다는 가정하에
         author = self.request.user #
